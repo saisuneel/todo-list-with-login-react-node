@@ -1,19 +1,15 @@
 import React, {Fragment} from 'react'
 import {NextPage} from "next";
+import ToDoList from "../components/ToDoList";
 
-type Props = {
-}
+type Props = {}
 
-const ToDos: NextPage<Props> = ({ }) => {
+const ToDos: NextPage<Props> = ({}) => {
 
     return (
         <Fragment>
             <h1>To do</h1>
-            <ul>
-                <li>Todo 1<input type="checkbox"/></li>
-                <li>Todo 2<input type="checkbox"/></li>
-                <li>Todo 3<input type="checkbox"/></li>
-            </ul>
+            <ToDoList/>
         </Fragment>
     )
 }
