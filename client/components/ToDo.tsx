@@ -1,12 +1,10 @@
-import React from "react";
+import React, {FunctionComponent} from "react";
 
 type Props = {
     content: string
 }
 
-type ToDo = React.FunctionComponent<Props>
-
-const ToDo: ToDo = ({content}) => {
+const ToDo: FunctionComponent<Props> = ({content}) => {
     return <li><input type="checkbox"/>{content}</li>
 };
 

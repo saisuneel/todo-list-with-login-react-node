@@ -1,7 +1,7 @@
-import React from "react";
+import React, {FunctionComponent} from "react";
 import ToDo from "./ToDo";
 
-const ToDoList: React.FunctionComponent = () => {
+const ToDoList: FunctionComponent = () => {
     return (
         <ul>
             <ToDo content={"Foo"} />

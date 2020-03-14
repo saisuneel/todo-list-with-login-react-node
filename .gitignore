@@ -2,13 +2,15 @@
 node_modules/
 
 # Editors
-.idea
+.idea/
 *.iml
 
 # OS metadata
 .DS_Store
 Thumbs.db
 
-server/dist/**/*
+dist/
+.next/
 
 yarn.lock
+

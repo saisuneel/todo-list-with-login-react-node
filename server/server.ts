@@ -2,14 +2,14 @@ import express from "express";
 import next from "next";
 import {Response, Request} from "express";
 import {middleware} from "./authentication/middleware";
-import {handleRegister, handleSignIn, handleUserProfile} from "./authentication/routes";
-import {registerValidator} from "./authentication/validator";
+import {handleRegister, handleSignIn} from "./authentication/routes";
+import {validateUser} from "./authentication/validator";
 import bodyParser from "body-parser";
 import cors from "cors";
 import mongoose from "mongoose";
+import {Routes} from "../shared/routes";
 
 const startServer = async () => {
-    // MongoDB conection
     mongoose.Promise = global.Promise;
     mongoose.connect("mongodb://localhost:27017/db", {
         useNewUrlParser: true,
@@ -22,7 +22,6 @@ const startServer = async () => {
         }
     )
 
-// Remvoe MongoDB warning error
     mongoose.set('useCreateIndex', true);
 
     const port = 3000
@@ -40,9 +39,9 @@ const startServer = async () => {
     server.use(cors());
     server.use(middleware)
 
-    server.post("/register", registerValidator, handleRegister)
-    server.post("/sign-in", handleSignIn)
-    server.get('/user-profile/:id', handleUserProfile)
+    server.post(Routes.REGISTER, validateUser, handleRegister)
+    server.post(Routes.SING_IN, validateUser, handleSignIn)
+
     server.all('*', nextJsGetHandler)
 
     server.listen(port, (err: Error) => {
