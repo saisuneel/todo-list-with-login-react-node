@@ -1,12 +1,9 @@
-import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import {userSchema} from "./user";
 import {User} from "./types";
 import {NextFunction, Response, Request} from "express";
 import {validationResult} from "express-validator";
-
-const router = express.Router();
 
 const handleRegister = (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -42,6 +39,7 @@ const handleRegister = (req: Request, res: Response) => {
 }
 
 const handleSignIn = (req: Request, res: Response) => {
+    console.log("handleSignIn")
     let getUser: User;
     userSchema.findOne({
         email: req.body.email
@@ -54,6 +52,7 @@ const handleSignIn = (req: Request, res: Response) => {
         }
         // @ts-ignore TODO
         getUser = user;
+        console.log("handleSignIn bcrypt comparing")
         // @ts-ignore TODO
         return bcrypt.compare(req.body.password, user.password);
         // @ts-ignore TODO
@@ -70,13 +69,14 @@ const handleSignIn = (req: Request, res: Response) => {
         }, "longer-secret-is-better", {
             expiresIn: "1h"
         });
+        console.log("handleSignIn jwtToken", jwtToken)
         res.status(200).json({
             token: jwtToken,
             expiresIn: 3600,
             msg: getUser
         });
-        // @ts-ignore TODO
 
+        // @ts-ignore TODO
     }).catch(err => {
         return res.status(401).json({
             message: "Authentication failed"
@@ -96,18 +96,5 @@ const handleUserProfile = (req: Request, res: Response, next: NextFunction) => {
     })
 }
 
-
-// Get Users TODO
-router.route('/').get(
-    // @ts-ignore TODO
-    (req, res, next) => {
-        userSchema.find((error, response) => {
-            if (error) {
-                return next(error)
-            } else {
-                res.status(200).json(response)
-            }
-        })
-    })
 
 export {handleRegister, handleSignIn, handleUserProfile}

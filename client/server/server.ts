@@ -41,7 +41,7 @@ const startServer = async () => {
     server.use(middleware)
 
     server.post("/register", registerValidator, handleRegister)
-    server.post("/signin", handleSignIn)
+    server.post("/sign-in", handleSignIn)
     server.get('/user-profile/:id', handleUserProfile)
     server.all('*', nextJsGetHandler)
 
