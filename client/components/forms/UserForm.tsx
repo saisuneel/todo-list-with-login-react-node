@@ -3,12 +3,13 @@ import InputGroup from "./InputGroup";
 import Form from "./Form";
 import {Routes} from "../../../shared/routes";
 import {postRequest} from "../../../shared/http";
-import { useRouter } from 'next/router'
+import {useRouter} from 'next/router'
 
 interface Props {
     title: string
     postUrl: string
 }
+
 const UserForm: FunctionComponent<Props> = ({title, postUrl}) => {
     const router = useRouter()
     const [email, setEmail] = useState("");
@@ -25,8 +26,12 @@ const UserForm: FunctionComponent<Props> = ({title, postUrl}) => {
                 router.push(Routes.TO_DOS)
             }
         } catch (e) {
-            console.log("error on form submit", e)
-            setErrorMsg("Check your credentials and try again")
+            console.log("UserForm error", e, title)
+            if (title.toLowerCase() === "register") {
+                setErrorMsg("Non valid credentials, try sign in if user was already created")
+            }else {
+                setErrorMsg("Check your credentials and try again")
+            }
         }
     }
 

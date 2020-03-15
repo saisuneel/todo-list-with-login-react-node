@@ -1,14 +1,16 @@
 import axios from "axios"
 
-export type HttpMethod = "GET" | "POST"
+export type HttpMethod = "GET" | "POST" | "DELETE"
 
 const requestConfig = (url?: string, method?: HttpMethod, data?: Object) => {
     return {
-        baseUrl: "http://localhost:3000/",
+        baseUrl: "http://localhost:3000",
         url: url || "",
         method: method || "GET",
         timeout: 10000,
-        data
+        data,
+        "Content-Type": "application/json",
+        "Accept": "application/json",
     }
 }
 
@@ -20,13 +22,18 @@ const getRequest = (url: string) => {
     return request(url)
 }
 
+const deleteRequest = (url: string) => {
+    return request(url, "DELETE")
+}
+
 const request = async (url?: string, httpMethod?: HttpMethod, data?: Object) => {
-    console.log("method:", httpMethod, "url:", url);
     const config = requestConfig(url, httpMethod, data);
+    console.log("method:", config.method, "url:", `${config.baseUrl}${url}`);
     return await axios.request(config)
 }
 
 export {
     getRequest,
     postRequest,
+    deleteRequest,
 }

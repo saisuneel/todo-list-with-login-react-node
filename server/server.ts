@@ -1,4 +1,4 @@
-import express from "express";
+import express, {Express} from "express";
 import next from "next";
 import {Response, Request} from "express";
 import bodyParser from "body-parser";
@@ -10,6 +10,10 @@ import {validateUser} from "./authentication/auth-validator";
 import {handleRegister} from "./authentication/routes/handle-register";
 import {handleSignIn} from "./authentication/routes/handle-sign-in";
 import {handleIsLoggedIn} from "./authentication/routes/handle-is-logged-in";
+import {handleCreateTodo} from "./to-do/handle-create-todo";
+import {handleUpdateTodo} from "./to-do/handle-update-todo";
+import {getTodosByUserId} from "./to-do/get-todos-by-user-id";
+import {handleDeleteTodo} from "./to-do/handle-delete-todo";
 
 const startServer = async () => {
     mongoose.Promise = global.Promise;
@@ -34,16 +38,8 @@ const startServer = async () => {
     const nextJsGetHandler = (req: Request, res: Response) => app.getRequestHandler()(req, res)
     const server = express()
 
-    server.use(bodyParser.json());
-    server.use(bodyParser.urlencoded({
-        extended: false
-    }));
-    server.use(cors());
-    server.use(authMiddleware)
-
-    server.post(Routes.REGISTER, validateUser, handleRegister)
-    server.post(Routes.SIGN_IN, validateUser, handleSignIn)
-    server.get(Routes.LOGGED_IN, handleIsLoggedIn)
+    useMiddleware(server);
+    handleRoutes(server);
 
     server.all('*', nextJsGetHandler)
 
@@ -53,5 +49,24 @@ const startServer = async () => {
     })
 }
 
+const useMiddleware = (server: Express) => {
+    server.use(bodyParser.json());
+    server.use(bodyParser.urlencoded({
+        extended: false
+    }));
+    server.use(cors());
+    server.use(authMiddleware)
+}
+
+const handleRoutes = (server: Express) => {
+    server.get(Routes.TO_DO, getTodosByUserId)
+    server.post(Routes.TO_DO, handleCreateTodo)
+    server.put(Routes.TO_DO, handleUpdateTodo)
+    server.delete(`${Routes.TO_DO}/:id`, handleDeleteTodo)
+
+    server.post(Routes.REGISTER, validateUser, handleRegister)
+    server.post(Routes.SIGN_IN, validateUser, handleSignIn)
+    server.get(Routes.LOGGED_IN, handleIsLoggedIn)
+}
 
 startServer()

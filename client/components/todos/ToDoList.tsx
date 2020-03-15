@@ -1,24 +1,29 @@
-import React, {FunctionComponent, Fragment, useState} from "react";
+import React, {FunctionComponent, Fragment, useState, useEffect} from "react";
 import ToDo from "./ToDo";
-import {globalStyles} from "../global.styles";
-import {TodoItem} from "./types";
+import AddToDo from "./AddTodo";
+import {TodoItem} from "../../../shared/todo-item";
+import {getRequest} from "../../../shared/http";
+import {Routes} from "../../../shared/routes";
 
-const userTodos: TodoItem[] = [
-    {
-        done: true,
-        content: "item 111",
-        id: "1"
-
-    } as TodoItem,
-    {
-        done: false,
-        content: "item 222",
-        id: "2"
-
-    } as TodoItem]
 const ToDoList: FunctionComponent = () => {
 
-    const [todos, setTodos] = useState(userTodos)
+    const [todos, setTodos] = useState<TodoItem[]>([])
+    const getUserTodos = async () => {
+        try {
+            const response = await getRequest(Routes.TO_DO)
+            const responseTodos: TodoItem[] = response?.data?.todos
+            setTodos([...responseTodos])
+        } catch (e) {
+            console.log("e", e)
+        }
+    }
+
+    useEffect(() => {
+        if (todos.length === 0) {
+            getUserTodos()
+        }
+    })
+
 
     return (
         <Fragment>
@@ -28,11 +33,11 @@ const ToDoList: FunctionComponent = () => {
                         todos={todos}
                         setTodos={setTodos}
                         done={todo.done}
-                        key={todo.id}
-                        id={todo.id}/>)
+                        key={todo._id}
+                        id={todo._id}/>)
                 }
             </ul>
-            <button style={globalStyles.submitBtn}>Add To Do</button>
+            <AddToDo setTodos={setTodos} todos={todos}/>
         </Fragment>
     )
 }

@@ -6,7 +6,7 @@ import {constants} from "http2";
 import {validationResult} from "express-validator";
 import {CookieKeys} from "../../config/cookie-keys";
 import jwt from "jsonwebtoken";
-import {secureCookieResponse} from "../../config/secure-cookie-response";
+import {cookieResponse} from "../../config/cookie-response";
 import {User} from "../../user/user-types";
 
 const handleRegister = (req: Request, res: Response) => {
@@ -18,7 +18,7 @@ const handleRegister = (req: Request, res: Response) => {
     }
 }
 
-export const createTokenWithUserId = (user: User) =>{
+export const createTokenWithUserId = (user: User) => {
     const userId = user._id
     return jwt.sign({userId}, Security.JWT_SECRET);
 }
@@ -28,9 +28,9 @@ const onValidRegister = async (req: Request, res: Response) => {
         const email = req.body.email
         const password = await bcrypt.hash(req.body.password, Security.SALT_ROUNDS)
         const user: any = await createUser(email, password)
-        secureCookieResponse(res, CookieKeys.TOKEN, createTokenWithUserId(user));
+        cookieResponse(res, CookieKeys.TOKEN, createTokenWithUserId(user));
     } catch (error) {
-        res.json({error}).status(constants.HTTP_STATUS_UNAUTHORIZED).end()
+        res.status(constants.HTTP_STATUS_CONFLICT).json({error}).end()
     }
 }
 
