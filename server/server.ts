@@ -1,13 +1,13 @@
 import express from "express";
 import next from "next";
 import {Response, Request} from "express";
-import {middleware} from "./authentication/middleware";
-import {handleRegister, handleSignIn} from "./authentication/routes";
-import {validateUser} from "./authentication/validator";
 import bodyParser from "body-parser";
 import cors from "cors";
 import mongoose from "mongoose";
 import {Routes} from "../shared/routes";
+import {authMiddleware} from "./authentication/auth-middleware";
+import {handleRegister, handleSignIn} from "./authentication/auth-routes";
+import {validateUser} from "./authentication/auth-validator";
 
 const startServer = async () => {
     mongoose.Promise = global.Promise;
@@ -37,7 +37,7 @@ const startServer = async () => {
         extended: false
     }));
     server.use(cors());
-    server.use(middleware)
+    server.use(authMiddleware)
 
     server.post(Routes.REGISTER, validateUser, handleRegister)
     server.post(Routes.SING_IN, validateUser, handleSignIn)

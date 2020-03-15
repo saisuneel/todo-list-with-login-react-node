@@ -4,11 +4,15 @@ export type HttpMethod = "GET" | "POST"
 
 interface Props {
     children: ReactNode
-    action?: string
+    urlAction: string
+    btnTxt: string
     method?: HttpMethod
 }
 
 const styles = {
+    formTitle: {
+        margin: "10px 17px"
+    },
     form: {
         borderRadius: "3px",
         border: "1px solid dimgrey",
@@ -25,16 +29,29 @@ const styles = {
         fontSize: "12px",
         alignSelf: "flex-end",
         margin: "0 20px 20px",
-        border: "1px solid dimgray"
+        border: "1px solid dimgray",
+        cursor: "pointer"
     } as CSSProperties
 }
 
 const Form: FunctionComponent<Props> = (props: Props) => {
-    const {children, action, method = "GET"} = props;
+    const {children, urlAction, method = "GET", btnTxt} = props;
+    const onClick = () => {
+
+    }
     return (
-        <form action={action} method={method} style={styles.form}>
+        <form action={urlAction}
+              method={method}
+              style={styles.form}>
+            <h1 style={styles.formTitle}>
+                {btnTxt}
+            </h1>
             {children}
-            <button type="submit" style={styles.submitBtn}>Sign In</button>
+            <button onClick={()=> onClick()}
+                type="submit"
+                    style={styles.submitBtn}>
+                {btnTxt}
+            </button>
         </form>
     )
 }

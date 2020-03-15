@@ -3,8 +3,8 @@ import {NextFunction, Response, Request} from "express";
 import jwt from "jsonwebtoken";
 
 // @ts-ignore
-const middleware = (req: Request, res: Response, next: NextFunction) => {
-    /*
+const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    /* TODO if not auth redirect to HOME
     try {
         const token = req?.headers?.authorization?.split(" ")[1] as string;
         jwt.verify(token, "longer-secret-is-better");
@@ -17,6 +17,6 @@ const middleware = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export {
-    middleware
+    authMiddleware
 }
 

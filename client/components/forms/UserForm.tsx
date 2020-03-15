@@ -5,8 +5,9 @@ import {Routes} from "../../../shared/routes";
 
 const UserForm: FunctionComponent = () => {
     return (
-        <Form action={Routes.SING_IN}
-              method={"POST"}>
+        <Form urlAction={Routes.SING_IN}
+              method={"POST"}
+              btnTxt={"Sign In"}>
             <InputGroup type={"email"} name={"email"} minLength={5} autoFocus={true}/>
             <InputGroup type={"password"} name={"password"} minLength={8}/>
         </Form>

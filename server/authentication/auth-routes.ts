@@ -3,37 +3,29 @@ import bcrypt from "bcrypt";
 import {Response, Request} from "express";
 import {validationResult} from "express-validator";
 import {constants} from "http2";
-import {ErrorMessages} from "../config/error-messages";
 import {Security} from "../config/security";
-import {Routes} from "../../shared/routes";
-import {UserSchema} from "./user/user-schema";
-import {User} from "./types";
+import {createUser, findUserByEmail} from "../user/user-model";
+import {User} from "../user/user-types";
 
 const handleRegister = (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        res.status(constants.HTTP_STATUS_NOT_ACCEPTABLE).redirect(Routes.HOME)
+        res.status(constants.HTTP_STATUS_NOT_ACCEPTABLE).end()
     } else {
         onValidRegister(req, res)
     }
-
 }
 
 const onValidRegister = async (req: Request, res: Response) => {
     try {
         const email = req.body.email
         const password = await bcrypt.hash(req.body.password, Security.SALT_ROUNDS)
-        const user = new UserSchema({email, password})
+        await createUser(email, password)
 
-        await user.save()
         res.status(constants.HTTP_STATUS_CREATED).json({saved: true}).end()
 
     } catch (error) {
-        responseWithError(
-            res,
-            constants.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-            ErrorMessages.REGISTER_ERROR
-        )
+        res.json({error}).status(constants.HTTP_STATUS_UNAUTHORIZED).end()
     }
 }
 
@@ -42,20 +34,33 @@ const validatePassword = async (reqPassword: string, userPassword: string): Prom
     return await bcrypt.compare(reqPassword, userPassword)
 }
 
+const hoursAfterNow = (hours: number) => new Date(Date.now() + hours * 3600000)
+
+const respondWithTokenCookie = (res: Response, token: string) => {
+    console.log("respondWithTokenCookie()")
+    res.cookie(token, token, {
+        // httpOnly: true,
+        // secure: true,
+        expires: hoursAfterNow(24)
+    }).status(constants.HTTP_STATUS_OK).end()
+}
+
 const onValidSignIn = async (req: Request, res: Response) => {
     const email = req.body.email;
-    const user = await UserSchema.findOne({email}).exec() as unknown as User
+    const user: User = await findUserByEmail(email)
+    console.log("user", user)
     if (!user) {
         res.status(constants.HTTP_STATUS_NOT_FOUND).end()
 
     } else {
         const isPasswordValid = await validatePassword(req.body.password, user.password);
+        console.log("isPasswordValid", isPasswordValid)
         if (isPasswordValid) {
             const userId = user._id;
             let token = jwt.sign({userId}, Security.JWT_SECRET);
-            res.status(constants.HTTP_STATUS_OK).json({token}).end()
+            respondWithTokenCookie(res, token);
         } else {
-            res.status(constants.HTTP_STATUS_NOT_ACCEPTABLE).redirect(Routes.HOME)
+            res.status(constants.HTTP_STATUS_NOT_ACCEPTABLE).end()
         }
     }
 }
@@ -63,14 +68,10 @@ const onValidSignIn = async (req: Request, res: Response) => {
 const handleSignIn = (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        res.status(constants.HTTP_STATUS_NOT_ACCEPTABLE).redirect(Routes.HOME)
+        res.status(constants.HTTP_STATUS_NOT_ACCEPTABLE).end()
     } else {
         onValidSignIn(req, res);
     }
-}
-
-const responseWithError = (res: Response, status: number, error: ErrorMessages) => {
-    res.json({error}).status(status).end()
 }
 
 export {handleRegister, handleSignIn}

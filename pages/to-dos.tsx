@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react'
 import {NextPage} from "next";
-import ToDoList from "../components/ToDoList";
+import ToDoList from "../client/components/todos/ToDoList";
 
 type Props = {}
 
