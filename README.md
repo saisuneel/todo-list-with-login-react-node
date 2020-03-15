@@ -1,11 +1,14 @@
 # Nextjs Typescript Seed
 
-## Install it and run:
+1. run database container: 
+    
+        docker-compose up
+     
+2. install dependencies: 
+         
+        npm install
+        
+3. run dev mode:
 
-```bash
-npm install
-npm run dev
-# or
-yarn
-yarn dev
-```
+       npm run dev
+
