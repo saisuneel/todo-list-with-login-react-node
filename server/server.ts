@@ -42,8 +42,8 @@ const startServer = async () => {
     server.use(authMiddleware)
 
     server.post(Routes.REGISTER, validateUser, handleRegister)
-    server.post(Routes.SING_IN, validateUser, handleSignIn)
-    server.get(Routes.IS_LOGGED_IN, handleIsLoggedIn)
+    server.post(Routes.SIGN_IN, validateUser, handleSignIn)
+    server.get(Routes.LOGGED_IN, handleIsLoggedIn)
 
     server.all('*', nextJsGetHandler)
 

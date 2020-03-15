@@ -4,7 +4,8 @@ import React from "react"
 const styles = {
     body: {
         fontFamily: "Lato, sans-serif",
-        padding: "10px 20px"
+        padding: "10px 20px",
+        paddingTop: "90px",
     }
 }
 
@@ -17,14 +18,14 @@ class MyDocument extends Document {
     render() {
         return (
             <Html>
-                <Head>
-                    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap"
-                          rel="stylesheet"/>
-                </Head>
-                <body style={styles.body}>
-                <Main/>
-                <NextScript/>
-                </body>
+            <Head>
+                <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap"
+                      rel="stylesheet"/>
+            </Head>
+            <body style={styles.body}>
+            <Main/>
+            <NextScript/>
+            </body>
             </Html>
         )
     }

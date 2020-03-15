@@ -2,7 +2,7 @@ import {UserSchema} from "./user-schema";
 import {User} from "./user-types";
 
 const createUser = async (email: string, password: string) => {
-    return await UserSchema.create({email, password}) as unknown as Promise<User>
+    return await UserSchema.create({email, password})
 }
 
 const findUserByEmail = async (email: string) => {

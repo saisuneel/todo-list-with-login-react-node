@@ -4,6 +4,10 @@ import {createUser} from "../../user/user-model";
 import bcrypt from "bcrypt";
 import {constants} from "http2";
 import {validationResult} from "express-validator";
+import {CookieKeys} from "../../config/cookie-keys";
+import jwt from "jsonwebtoken";
+import {secureCookieResponse} from "../../config/secure-cookie-response";
+import {User} from "../../user/user-types";
 
 const handleRegister = (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -14,14 +18,17 @@ const handleRegister = (req: Request, res: Response) => {
     }
 }
 
+export const createTokenWithUserId = (user: User) =>{
+    const userId = user._id
+    return jwt.sign({userId}, Security.JWT_SECRET);
+}
+
 const onValidRegister = async (req: Request, res: Response) => {
     try {
         const email = req.body.email
         const password = await bcrypt.hash(req.body.password, Security.SALT_ROUNDS)
-        await createUser(email, password)
-
-        res.status(constants.HTTP_STATUS_CREATED).json({saved: true}).end()
-
+        const user: any = await createUser(email, password)
+        secureCookieResponse(res, CookieKeys.TOKEN, createTokenWithUserId(user));
     } catch (error) {
         res.json({error}).status(constants.HTTP_STATUS_UNAUTHORIZED).end()
     }

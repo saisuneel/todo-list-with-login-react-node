@@ -5,7 +5,11 @@ import {Routes} from "../../../shared/routes";
 import {postRequest} from "../../../shared/http";
 import { useRouter } from 'next/router'
 
-const UserForm: FunctionComponent = () => {
+interface Props {
+    title: string
+    postUrl: string
+}
+const UserForm: FunctionComponent<Props> = ({title, postUrl}) => {
     const router = useRouter()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -14,8 +18,10 @@ const UserForm: FunctionComponent = () => {
     const onClick = async (e: MouseEvent) => {
         e.preventDefault();
         try {
-            const response = await postRequest(Routes.SING_IN, {email, password})
-            if (Number(response.status) === 200) {
+            const response = await postRequest(postUrl, {email, password})
+            const isSignedUp = Number(response.status) === 200;
+            const isRegistered = Number(response.status) === 201;
+            if (isSignedUp || isRegistered) {
                 router.push(Routes.TO_DOS)
             }
         } catch (e) {
@@ -27,7 +33,7 @@ const UserForm: FunctionComponent = () => {
     return (
         <Form onClick={onClick}
               errorMsg={errorMsg}
-              btnTxt={"Sign In"}>
+              btnTxt={title}>
             <InputGroup
                 value={email}
                 setValue={setEmail}

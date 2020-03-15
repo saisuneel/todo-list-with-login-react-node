@@ -1,21 +1,17 @@
-import jwt from "jsonwebtoken";
 import {Response, Request} from "express";
 import {validationResult} from "express-validator";
 import {constants} from "http2";
-import {Security} from "../../config/security";
 import {findUserByEmail} from "../../user/user-model";
 import {User} from "../../user/user-types";
 import {validatePassword} from "../auth-validator";
 import {secureCookieResponse} from "../../config/secure-cookie-response";
 import {CookieKeys} from "../../config/cookie-keys";
-
+import {createTokenWithUserId} from "./handle-register";
 
 const onValidUser = async (req: Request, res: Response, user: User) => {
     const isPasswordValid = await validatePassword(req.body.password, user.password);
     if (isPasswordValid) {
-        const userId = user._id;
-        let token = jwt.sign({userId}, Security.JWT_SECRET);
-        secureCookieResponse(res, CookieKeys.TOKEN, token);
+        secureCookieResponse(res, CookieKeys.TOKEN, createTokenWithUserId(user));
     } else {
         res.status(constants.HTTP_STATUS_NOT_ACCEPTABLE).end()
     }

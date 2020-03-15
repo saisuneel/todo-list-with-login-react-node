@@ -12,3 +12,4 @@
 
        npm run dev
 
+4. Regis

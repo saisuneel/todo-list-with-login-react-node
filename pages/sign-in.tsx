@@ -4,14 +4,14 @@ import UserForm from "../client/components/forms/UserForm";
 import Nav from "../client/components/shared/Nav";
 import {Routes} from "../shared/routes";
 
-const IndexPage: NextPage = () => {
+const SignIn: NextPage = () => {
     return (
         <Fragment>
             <Nav/>
-            <UserForm title={"Register"}
-                      postUrl={Routes.REGISTER}/>
+            <UserForm title={"Sign In"} postUrl={Routes.SIGN_IN}/>
         </Fragment>
     )
 }
 
-export default IndexPage
+
+export default SignIn
