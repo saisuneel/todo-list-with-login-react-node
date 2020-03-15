@@ -1,6 +1,7 @@
 import React, {FunctionComponent, ReactNode, MouseEvent} from "react"
 import {styles} from "./form-styles"
 import Alert from "../Alert";
+import {globalStyles} from "../global.styles";
 
 interface Props {
     children: ReactNode
@@ -18,7 +19,7 @@ const Form: FunctionComponent<Props> = (props: Props) => {
             <h1 style={styles.formTitle}>{btnTxt}</h1>
             {children}
             <button onClick={(e) => onClick(e)}
-                    style={styles.submitBtn}>
+                    style={globalStyles.submitBtn}>
                 {btnTxt}
             </button>
         </form>
