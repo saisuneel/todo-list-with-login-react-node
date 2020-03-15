@@ -1,54 +1,23 @@
-import React, {CSSProperties, FunctionComponent, ReactNode} from "react";
-
-export type HttpMethod = "GET" | "POST"
+import React, {FunctionComponent, ReactNode, MouseEvent} from "react"
+import {styles} from "./form-styles"
+import Alert from "../Alert";
 
 interface Props {
     children: ReactNode
-    urlAction: string
     btnTxt: string
-    method?: HttpMethod
-}
-
-const styles = {
-    formTitle: {
-        margin: "10px 17px"
-    },
-    form: {
-        borderRadius: "3px",
-        border: "1px solid dimgrey",
-        maxWidth: "300px",
-        display: "flex",
-        flexDirection: "column",
-    } as CSSProperties,
-    submitBtn: {
-        padding: "10px 17px",
-        width: "fit-content",
-        borderRadius: "4px",
-        fontWeight: "bolder",
-        textTransform: "uppercase",
-        fontSize: "12px",
-        alignSelf: "flex-end",
-        margin: "0 20px 20px",
-        border: "1px solid dimgray",
-        cursor: "pointer"
-    } as CSSProperties
+    errorMsg: string
+    onClick: (e: MouseEvent) => void
 }
 
 const Form: FunctionComponent<Props> = (props: Props) => {
-    const {children, urlAction, method = "GET", btnTxt} = props;
-    const onClick = () => {
+    const {children, btnTxt, onClick, errorMsg} = props
 
-    }
     return (
-        <form action={urlAction}
-              method={method}
-              style={styles.form}>
-            <h1 style={styles.formTitle}>
-                {btnTxt}
-            </h1>
+        <form style={styles.form}>
+            <Alert errorMsg={errorMsg}/>
+            <h1 style={styles.formTitle}>{btnTxt}</h1>
             {children}
-            <button onClick={()=> onClick()}
-                type="submit"
+            <button onClick={(e) => onClick(e)}
                     style={styles.submitBtn}>
                 {btnTxt}
             </button>

@@ -6,8 +6,10 @@ import cors from "cors";
 import mongoose from "mongoose";
 import {Routes} from "../shared/routes";
 import {authMiddleware} from "./authentication/auth-middleware";
-import {handleRegister, handleSignIn} from "./authentication/auth-routes";
 import {validateUser} from "./authentication/auth-validator";
+import {handleRegister} from "./authentication/routes/handle-register";
+import {handleSignIn} from "./authentication/routes/handle-sign-in";
+import {handleIsLoggedIn} from "./authentication/routes/handle-is-logged-in";
 
 const startServer = async () => {
     mongoose.Promise = global.Promise;
@@ -41,6 +43,7 @@ const startServer = async () => {
 
     server.post(Routes.REGISTER, validateUser, handleRegister)
     server.post(Routes.SING_IN, validateUser, handleSignIn)
+    server.get(Routes.IS_LOGGED_IN, handleIsLoggedIn)
 
     server.all('*', nextJsGetHandler)
 
