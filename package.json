@@ -4,13 +4,12 @@
   "scripts": {
     "dev": "nodemon",
     "build": "next build && tsc --project tsconfig.server.json",
-    "start": "cross-env NODE_ENV=production node dist/server.js",
+    "start": "cross-env NODE_ENV=production node dist/server/server.js",
     "next-remove": "rm -rf .next/"
   },
   "dependencies": {
     "axios": "^0.19.2",
     "bcrypt": "^4.0.1",
-    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "cross-env": "^5.2.0",

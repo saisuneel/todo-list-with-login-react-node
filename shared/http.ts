@@ -28,6 +28,7 @@ const deleteRequest = (url: string) => {
 
 const request = async (url?: string, httpMethod?: HttpMethod, data?: Object) => {
     const config = requestConfig(url, httpMethod, data);
+
     console.log("method:", config.method, "url:", `${config.baseUrl}${url}`);
     return await axios.request(config)
 }
