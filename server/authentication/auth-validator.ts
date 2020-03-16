@@ -1,5 +1,5 @@
 import  { check } from 'express-validator';
-import bcrypt from "bcrypt";
+import {Bcrypt} from "../server";
 
 const validateUser = [
     check('email', 'Email is required')
@@ -14,7 +14,7 @@ const validateUser = [
 
 
 const validatePassword = async (reqPassword: string, userPassword: string): Promise<boolean> => {
-    return await bcrypt.compare(reqPassword, userPassword)
+    return await Bcrypt.compare(reqPassword, userPassword)
 }
 
 export {validateUser, validatePassword};

@@ -14,10 +14,13 @@ import {handleCreateTodo} from "./to-do/handle-create-todo";
 import {handleUpdateTodo} from "./to-do/handle-update-todo";
 import {getTodosByUserId} from "./to-do/get-todos-by-user-id";
 import {handleDeleteTodo} from "./to-do/handle-delete-todo";
+import bcrypt from "bcrypt";
+
+export const Bcrypt = bcrypt;
 
 const startServer = async () => {
     mongoose.Promise = global.Promise;
-    mongoose.connect("mongodb://localhost:27017/db", {
+    mongoose.connect("mongodb://mongo:27017/db", {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }).then(() => {
@@ -45,7 +48,9 @@ const startServer = async () => {
 
     server.listen(port, (err: Error) => {
         if (err) throw err
+        console.log(`*********************************************`)
         console.log(`Server listening on http://localhost:${port}`)
+        console.log(`*********************************************`)
     })
 }
 
